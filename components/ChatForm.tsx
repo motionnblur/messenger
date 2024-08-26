@@ -1,4 +1,5 @@
 import React from "react";
+import ChatWindow from "./ChatWindow";
 
 export default function ChatForm() {
   return (
@@ -7,7 +8,7 @@ export default function ChatForm() {
         <input type="text" className="w-full h-full text-slate-800"></input>
       </div>
       <div className="w-full h-full p-1 flex justify-center items-center">
-        <div className="w-full h-full bg-slate-300 rounded"></div>
+        <ChatWindow />
       </div>
     </div>
   );
