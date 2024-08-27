@@ -1,3 +1,3 @@
 import { atom } from "jotai";
 
-export const textAtom = atom<string>("");
+export const textList = atom<string[]>([]);

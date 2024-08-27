@@ -3,10 +3,10 @@
 import React from "react";
 import ChatLine from "./ChatLine";
 import { useAtomValue } from "jotai";
-import { textAtom } from "@/state/atoms";
+import { textList } from "@/state/atoms";
 
 export default function ChatCanvas() {
-  const text = useAtomValue(textAtom);
+  const text = useAtomValue(textList);
   console.log(text);
   return (
     <div className="w-full h-full p-1">
