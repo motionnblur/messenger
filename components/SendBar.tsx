@@ -22,7 +22,9 @@ export default function SendBar() {
         className="w-10 h-full rounded-full cursor-pointer bg-slate-50 flex items-center justify-center"
         onPointerUp={() => {
           var text: string = inputRef.current?.value!;
+          if (text === null || !text) return;
           setText((textList) => [...textList, text]);
+          inputRef.current!.value! = "";
         }}
       >
         <Send color="black" size={30} />
