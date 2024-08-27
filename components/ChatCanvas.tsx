@@ -11,7 +11,9 @@ export default function ChatCanvas() {
   return (
     <div className="w-full h-full p-1">
       <div className="w-full h-full flex flex-col bg-white rounded-sm">
-        <ChatLine />
+        {text.map((textString) => (
+          <ChatLine text={textString} />
+        ))}
       </div>
     </div>
   );
