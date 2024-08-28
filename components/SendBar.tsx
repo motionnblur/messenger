@@ -1,7 +1,8 @@
 "use client";
 
+import { socket } from "../socket";
 import { textList } from "@/state/atoms";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import React, { useRef } from "react";
 import { Send } from "react-feather";
 
@@ -23,7 +24,7 @@ export default function SendBar() {
         onPointerUp={() => {
           var text: string = inputRef.current?.value!;
           if (text === null || !text) return;
-          setText((textList) => [...textList, text]);
+          socket.emit("message", text);
           inputRef.current!.value! = "";
         }}
       >
