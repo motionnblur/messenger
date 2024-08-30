@@ -28,6 +28,7 @@ services:
     volumes:
       - ./server/socket-server:/App
       - /App/node_modules
+
   rest-server:
     build: server/rest-server/
     ports:
@@ -38,8 +39,8 @@ services:
   postgres:
     image: postgres
     restart: always
-    ports:
-    - "5432:5432"
+    expose:
+      - "5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1
