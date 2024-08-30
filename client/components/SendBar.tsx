@@ -1,14 +1,14 @@
 "use client";
 
+import { useAtomValue } from "jotai";
 import { socket } from "../socket";
-import { textList } from "@/state/atoms";
-import { useAtomValue, useSetAtom } from "jotai";
 import React, { useRef } from "react";
 import { Send } from "react-feather";
+import { userName } from "@/state/atoms";
 
 export default function SendBar() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const setText = useSetAtom(textList);
+  const useUserName = useAtomValue(userName);
 
   return (
     <div className="bottom-0 w-full h-[15%] flex flex-row items-center justify-center p-1 gap-1">
@@ -24,7 +24,10 @@ export default function SendBar() {
         onPointerUp={() => {
           var text: string = inputRef.current?.value!;
           if (text === null || !text) return;
-          socket.emit("message", text);
+          socket.emit("message", {
+            userName: useUserName,
+            message: text,
+          });
           inputRef.current!.value! = "";
         }}
       >

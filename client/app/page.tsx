@@ -1,14 +1,13 @@
 "use client";
 
 import { socket } from "../socket";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ChatForm from "@/components/ChatForm";
 import { useSetAtom } from "jotai";
-import { broadCastText, socketConnected } from "@/state/atoms";
+import { broadCastJson } from "@/state/atoms";
 
 export default function Home() {
-  const setSocketConnected = useSetAtom(socketConnected);
-  const setBroadcastText = useSetAtom(broadCastText);
+  const setBroadcastJson = useSetAtom(broadCastJson);
 
   const onConnect = () => {
     console.log("connected");
@@ -16,8 +15,8 @@ export default function Home() {
   const onDisconnect = () => {
     console.log("disconnected");
   };
-  const onBroadcast = (data: any) => {
-    setBroadcastText(data as string);
+  const onBroadcast = (data: IMessage) => {
+    setBroadcastJson(data);
   };
 
   useEffect(() => {

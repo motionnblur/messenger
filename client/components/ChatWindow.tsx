@@ -4,7 +4,7 @@ import ChatCanvas from "./ChatCanvas";
 
 export default function ChatWindow() {
   return (
-    <div className="w-full h-full rounded flex flex-col">
+    <div className="w-full h-full rounded flex flex-col justify-between">
       <ChatCanvas />
       <SendBar />
     </div>
