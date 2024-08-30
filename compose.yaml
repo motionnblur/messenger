@@ -7,6 +7,7 @@ services:
       - server
     volumes:
       - ./client:/App
+      - /App/node_modules
 
   client2:
     build: client/
@@ -16,10 +17,12 @@ services:
       - server
     volumes:
       - ./client:/App
-    
+      - /App/node_modules
+
   server:
     build: server/
     ports:
       - "4000:4000"
     volumes:
       - ./server:/App
+      - /App/node_modules
