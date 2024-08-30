@@ -4,7 +4,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - server
+      - socket-server
     volumes:
       - ./client:/App
       - /App/node_modules
@@ -14,15 +14,38 @@ services:
     ports:
       - "3001:3000"
     depends_on:
-      - server
+      - socket-server
     volumes:
       - ./client:/App
       - /App/node_modules
 
-  server:
-    build: server/
+  socket-server:
+    build: server/socket-server/
     ports:
       - "4000:4000"
+    depends_on:
+      - rest-server
     volumes:
-      - ./server:/App
+      - ./server/socket-server:/App
       - /App/node_modules
+  rest-server:
+    build: server/rest-server/
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server/rest-server:/App
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+    - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
+      - POSTGRES_DB=rest_server
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
