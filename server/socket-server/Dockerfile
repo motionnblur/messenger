@@ -8,5 +8,3 @@ RUN npm i
 COPY . .
 
 CMD ["node","main.js"]
-
-EXPOSE 5000
