@@ -3,7 +3,7 @@ import { auth } from "./auth/auth";
 
 export async function middleware(request: NextRequest) {
   const isAuthenticated: boolean = await auth(
-    request.cookies.get("SESSION_ID")!.value
+    request.cookies.get("SESSION_ID")?.value!
   );
 
   if (!isAuthenticated) {
