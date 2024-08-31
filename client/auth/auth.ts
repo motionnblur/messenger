@@ -1,6 +1,6 @@
 export async function auth(sessionID: string): Promise<boolean> {
   try {
-    const response = await fetch("http://localhost:8080/auth", {
+    const response = await fetch("http://rest-server:8080/auth", {
       method: "GET",
       credentials: "include",
       mode: "cors",

@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./auth/auth";
 
 export async function middleware(request: NextRequest) {
-  const isAuthenticated = await auth(request.cookies.get("SESSION_ID")!.value);
+  const isAuthenticated: boolean = await auth(
+    request.cookies.get("SESSION_ID")!.value
+  );
 
-  if (isAuthenticated === null || isAuthenticated === undefined) {
+  if (!isAuthenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
