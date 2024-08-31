@@ -1,12 +1,16 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSetAtom } from "jotai";
+import { userName } from "@/state/atoms";
 
 const loginUrl: string = "http://localhost:8080/login";
 const signUp: string = "http://localhost:8080/signup";
 
 export default function Page() {
   const { push } = useRouter();
+
+  const setUserName = useSetAtom(userName);
 
   const [loginStr, setLoginStr] = useState<String>("Login");
   const [typePassword, setTypePassword] = useState<String>("password");
@@ -33,6 +37,7 @@ export default function Page() {
       body: JSON.stringify(userForm),
     }).then((res) => {
       if (res.status == 200) {
+        setUserName(userForm.name);
         push("/messenger");
       }
     });
