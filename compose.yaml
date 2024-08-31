@@ -33,6 +33,7 @@ services:
     build: server/rest-server/
     ports:
       - "8080:8080"
+      - "5005:5005"
     volumes:
       - ./server/rest-server:/App
 

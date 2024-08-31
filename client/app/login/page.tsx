@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 const loginUrl: string = "http://localhost:8080/login";
 const signUp: string = "http://localhost:8080/signup";
 
-export default function page() {
+export default function Page() {
   const { push } = useRouter();
 
   const [loginStr, setLoginStr] = useState<String>("Login");
@@ -33,7 +33,7 @@ export default function page() {
       body: JSON.stringify(userForm),
     }).then((res) => {
       if (res.status == 200) {
-        push("/dashboard");
+        push("/messenger");
       }
     });
   };
