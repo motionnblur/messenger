@@ -11,7 +11,7 @@ export default function SendBar() {
   const useUserName = useAtomValue(userName);
 
   return (
-    <div className="bottom-0 w-full h-[15%] flex flex-row items-center justify-center p-1 gap-1">
+    <div className="bottom-0 w-full h-14 flex flex-row items-center justify-center p-1 gap-1">
       <div className="w-full h-full">
         <input
           type="text"

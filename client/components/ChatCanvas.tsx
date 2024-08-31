@@ -17,7 +17,7 @@ export default function ChatCanvas() {
   }, [useBroadCastJson]);
 
   return (
-    <div className="w-full h-64 p-1 overflow-auto">
+    <div className="w-full h-full p-1 overflow-auto shadow-md">
       <div className="w-full h-full flex flex-col bg-white rounded-sm">
         {messages.map((message) => (
           <ChatLine text={message} />
