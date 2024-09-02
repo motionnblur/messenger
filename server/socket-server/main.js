@@ -1,5 +1,23 @@
 const { Server } = require("socket.io");
 const { performance } = require("perf_hooks");
+const redis = require("redis");
+
+const client = redis.createClient({
+  socket: {
+    host: "redis", // Assuming the Redis service is named 'redis' in your Docker Compose
+    port: 6379,
+  },
+  username: "default",
+});
+client.connect();
+
+client.on("connect", () => {
+  console.log("Redis connected successfully");
+});
+
+client.on("error", (err) => {
+  console.error("Redis connection error:", err);
+});
 
 const io = new Server({
   cors: {
