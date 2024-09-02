@@ -27,14 +27,21 @@ const io = new Server({
 
 var list = [];
 
+const setVal = async (key, value) => {
+  await client.set(key, value);
+};
+
 io.on("connect", (socket) => {
+  const t = performance.now();
   list.push({
     key: socket.id,
-    time: performance.now(),
+    time: t,
   });
 
+  setVal(socket.id, t);
+
   socket.on("message", (messageJson) => {
-    list.forEach((json) => {
+    list.forEach(async (json) => {
       if (json.key == socket.id) {
         const lastTime = json.time;
 
@@ -47,6 +54,8 @@ io.on("connect", (socket) => {
         }
 
         io.emit("broadcast", messageJson);
+        const value = await client.get(socket.id);
+        console.log(value);
       }
     });
   });
