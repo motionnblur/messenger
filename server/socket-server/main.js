@@ -27,8 +27,8 @@ const io = new Server({
 
 var list = [];
 
-const setVal = async (key, value) => {
-  await client.set(key, value);
+const setVal = async (key, data) => {
+  await client.hSet(key, data);
 };
 
 io.on("connect", (socket) => {
@@ -38,7 +38,10 @@ io.on("connect", (socket) => {
     time: t,
   });
 
-  setVal(socket.id, t);
+  setVal(socket.id, {
+    name: "can",
+    surname: "hi",
+  });
 
   socket.on("message", (messageJson) => {
     list.forEach(async (json) => {
@@ -54,8 +57,8 @@ io.on("connect", (socket) => {
         }
 
         io.emit("broadcast", messageJson);
-        const value = await client.get(socket.id);
-        console.log(value);
+        const value = await client.hGetAll(socket.id);
+        console.log(JSON.stringify(value));
       }
     });
   });
