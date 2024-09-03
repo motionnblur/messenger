@@ -38,7 +38,14 @@ export default function Page() {
     }).then((res) => {
       if (res.status == 200) {
         setUserName(userForm.name);
-        push("/messenger");
+        const data = res.headers.get("sessionId");
+
+        if (data !== null && data !== undefined) {
+          localStorage.setItem("sessionId", data);
+          push("/messenger");
+        } else {
+          push("/login");
+        }
       }
     });
   };

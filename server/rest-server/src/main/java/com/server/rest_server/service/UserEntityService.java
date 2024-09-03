@@ -3,14 +3,19 @@ package com.server.rest_server.service;
 import com.server.rest_server.dto.UserEntityDto;
 import com.server.rest_server.entity.UserEntity;
 import com.server.rest_server.helper.AuthHelper;
+import com.server.rest_server.repository.RedisRepository;
 import com.server.rest_server.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.args.ExpiryOption;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserEntityService {
@@ -18,6 +23,10 @@ public class UserEntityService {
     protected UserRepository userRepository;
     @Autowired
     protected AuthHelper authHelper;
+    @Autowired
+    protected RedisRepository redisRepository;
+
+    protected JedisPool pool = new JedisPool("redis", 6379);
 
     public void authUser(HttpServletRequest request) throws Exception {
         Cookie[] cookies = request.getCookies();
@@ -54,9 +63,20 @@ public class UserEntityService {
         Cookie cookie = new Cookie("SESSION_ID", sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(60* 3); // 60 minutes
+        cookie.setMaxAge(60* 3); // 3 minutes
 
         response.addCookie(cookie);
+
+//        SessionData sData = new SessionData();
+//        sData.maxAge = 3; // minute
+        //redisRepository.save(sessionId, sData);
+        try (Jedis jedis = pool.getResource()) {
+            jedis.set("sessionId", sessionId);
+            jedis.expire("sessionId", 60*3);
+        }
+
+        response.setHeader("Access-Control-Expose-Headers", "sessionId");
+        response.setHeader("sessionId", sessionId);
 
         authHelper.addToAuthList(sessionId, userEntity.getUserName());
 
@@ -64,3 +84,7 @@ public class UserEntityService {
             throw new Exception("Login error");
     }
 }
+//
+//class SessionData {
+//    public int maxAge;
+//}

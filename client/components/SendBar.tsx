@@ -24,7 +24,11 @@ export default function SendBar() {
         onPointerUp={() => {
           var text: string = inputRef.current?.value!;
           if (text === null || !text) return;
+          const id = localStorage.getItem("sessionId");
+          if (id === null && id === undefined) return;
+
           socket.emit("message", {
+            sessionId: id,
             userName: useUserName,
             message: text,
           });

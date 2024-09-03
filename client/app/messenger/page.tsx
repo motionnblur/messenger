@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect } from "react";
-import ChatForm from "@/components/ChatForm";
 import { useSetAtom } from "jotai";
 import { broadCastJson } from "@/state/atoms";
 import { socket } from "@/socket";
