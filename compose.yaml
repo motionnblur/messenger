@@ -1,28 +1,58 @@
 services:
+
   client:
     build: client/
     ports:
       - "3000:3000"
+    expose:
+      - "3000"
     depends_on:
-      - server
+      - socket-server
     volumes:
       - ./client:/App
       - /App/node_modules
 
-  client2:
-    build: client/
-    ports:
-      - "3001:3000"
-    depends_on:
-      - server
-    volumes:
-      - ./client:/App
-      - /App/node_modules
-
-  server:
-    build: server/
+  socket-server:
+    build: server/socket-server/
     ports:
       - "4000:4000"
+    depends_on:
+      - rest-server
     volumes:
-      - ./server:/App
+      - ./server/socket-server:/App
       - /App/node_modules
+
+  rest-server:
+    build: server/rest-server/
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - ./server/rest-server:/App
+
+  postgres:
+    image: postgres
+    restart: always
+    expose:
+      - "5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
+      - POSTGRES_DB=rest_server
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    restart: always
+    expose:
+      - "6379"
+    volumes:
+      - ./redis.conf:/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=my-password
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+
+volumes:
+  pgdata:

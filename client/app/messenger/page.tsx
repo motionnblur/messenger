@@ -1,10 +1,10 @@
 "use client";
 
-import { socket } from "../socket";
 import React, { useEffect } from "react";
-import ChatForm from "@/components/ChatForm";
 import { useSetAtom } from "jotai";
 import { broadCastJson } from "@/state/atoms";
+import { socket } from "@/socket";
+import Messenger from "@/components/Messenger";
 
 export default function Home() {
   const setBroadcastJson = useSetAtom(broadCastJson);
@@ -32,8 +32,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-5">
-      <ChatForm />
+    <main className="w-full h-full flex items-center justify-center absolute left-0 top-0">
+      <Messenger />
     </main>
   );
 }

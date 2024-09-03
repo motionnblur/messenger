@@ -11,11 +11,11 @@ export default function SendBar() {
   const useUserName = useAtomValue(userName);
 
   return (
-    <div className="bottom-0 w-full h-[15%] flex flex-row items-center justify-center p-1 gap-1">
-      <div className="w-full h-full">
+    <div className="bottom-0 w-full h-14 flex flex-row items-center justify-center p-2 gap-1">
+      <div className="w-full h-full rounded-lg">
         <input
           type="text"
-          className="w-full h-full bg-white rounded-lg text-slate-800 p-1"
+          className="w-full h-full bg-slate-100 rounded-lg text-slate-800 p-2 shadow shadow-slate-500"
           ref={inputRef}
         />
       </div>
@@ -24,7 +24,11 @@ export default function SendBar() {
         onPointerUp={() => {
           var text: string = inputRef.current?.value!;
           if (text === null || !text) return;
+          const id = localStorage.getItem("sessionId");
+          if (id === null && id === undefined) return;
+
           socket.emit("message", {
+            sessionId: id,
             userName: useUserName,
             message: text,
           });
