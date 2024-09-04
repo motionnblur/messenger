@@ -4,6 +4,6 @@ import { io } from "socket.io-client";
 const URL =
   process.env.NODE_ENV === "production"
     ? undefined
-    : "http://192.168.1.103:4000";
+    : process.env.NEXT_PUBLIC_SOCKET_IP;
 
 export const socket = io(URL);
