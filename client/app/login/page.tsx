@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import { useSetAtom } from "jotai";
 import { userName } from "@/state/atoms";
 
-const loginUrl: string = "http://192.168.1.103:8080/login";
-const signUp: string = "http://192.168.1.103:8080/signup";
+const loginUrl: string = process.env.NEXT_PUBLIC_LOGIN_IP!;
+const signUp: string = process.env.NEXT_PUBLIC_SIGNUP_IP!;
 
 export default function Page() {
   const { push } = useRouter();
