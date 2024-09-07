@@ -27,6 +27,11 @@ export default function SendBar() {
           const id = localStorage.getItem("sessionId");
           if (id === null && id === undefined) return;
 
+          if (text.length > 100) {
+            alert("Message length should be equal or less than 100");
+            return;
+          }
+
           socket.emit("message", {
             sessionId: id,
             userName: useUserName,

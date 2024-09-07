@@ -2,6 +2,7 @@ package com.server.rest_server.controller;
 
 import com.server.rest_server.dto.UserEntityDto;
 import com.server.rest_server.entity.UserEntity;
+import com.server.rest_server.helper.SecurityHelper;
 import com.server.rest_server.repository.RedisRepository;
 import com.server.rest_server.repository.UserRepository;
 import com.server.rest_server.service.UserEntityService;
@@ -15,11 +16,15 @@ import org.springframework.web.bind.annotation.*;
 public class SignUpController {
     @Autowired
     protected UserEntityService userEntityService;
+    @Autowired
+    protected SecurityHelper securityHelper;
 
     @PutMapping("signup")
     private ResponseEntity<?> addUser(@RequestBody UserEntityDto userEntityDto) {
         try{
+            securityHelper.securityCheck(userEntityDto);
             UserEntity userEntity = userEntityService.saveUserEntity(userEntityDto);
+
             return new ResponseEntity<>(userEntity, HttpStatus.CREATED);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -28,7 +33,9 @@ public class SignUpController {
     @PostMapping("/login")
     private ResponseEntity<?> loginUser(@RequestBody UserEntityDto userEntityDto, HttpServletResponse response) {
         try{
+            securityHelper.securityCheck(userEntityDto);
             userEntityService.loginUser(response, userEntityDto);
+
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

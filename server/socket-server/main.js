@@ -11,7 +11,7 @@ const client = redis.createClient({
 client.connect();
 
 client.on("connect", () => {
-  console.log("Redis connected successfully");
+  console.log("Redis was connected successfully");
 });
 
 client.on("error", (err) => {
@@ -30,6 +30,12 @@ io.on("connect", (socket) => {
 
     if (value === null || value === undefined) {
       socket.disconnect();
+      return;
+    }
+    if (messageJson.message.length > 100) {
+      socket.emit("error", {
+        errorMessage: "Message length should be equal or less than 100",
+      });
       return;
     }
     io.emit("broadcast", messageJson);

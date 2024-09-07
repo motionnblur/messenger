@@ -18,16 +18,22 @@ export default function Home() {
   const onBroadcast = (data: IMessage) => {
     setBroadcastJson(data);
   };
+  const onError = (e: any) => {
+    console.log(e.errorMessage);
+    alert(e.errorMessage);
+  };
 
   useEffect(() => {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("broadcast", onBroadcast);
+    socket.on("error", onError);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("broadcast", onBroadcast);
+      socket.off("error", onError);
     };
   }, []);
 
