@@ -23,8 +23,6 @@ public class UserEntityService {
     protected UserRepository userRepository;
     @Autowired
     protected AuthHelper authHelper;
-    @Autowired
-    protected RedisRepository redisRepository;
 
     protected JedisPool pool = new JedisPool("redis", 6379);
 
