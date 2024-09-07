@@ -17,7 +17,7 @@ class UserEntityServiceTest {
     @InjectMocks private UserEntityService userEntityService;
 
     @Test
-    void saveUserEntity() throws Exception {
+    void shouldSaveNewUser() throws Exception {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName("Can");
         userEntity.setUserPassword("se22_343s");
@@ -31,5 +31,24 @@ class UserEntityServiceTest {
         UserEntity savedUserEntity = userEntityService.saveUserEntity(userEntityDto);
 
         assertEquals(userEntity, savedUserEntity);
+    }
+    @Test
+    void shouldThrowExceptionForExistingUser() throws Exception {
+        String existingUserName = "ExistingUser";
+
+        // Mock the repository to return an existing user
+        UserEntity existingUser = new UserEntity();
+        existingUser.setUserName(existingUserName);
+        when(userRepository.findByUserName(existingUserName)).thenReturn(existingUser);
+
+        // Create a UserEntityDto with existing username
+        UserEntityDto userEntityDto = new UserEntityDto();
+        userEntityDto.setName(existingUserName);
+
+        // Call the service and expect an exception
+
+        assertThrows(Exception.class, () -> {
+            userEntityService.saveUserEntity(userEntityDto);
+        });
     }
 }
