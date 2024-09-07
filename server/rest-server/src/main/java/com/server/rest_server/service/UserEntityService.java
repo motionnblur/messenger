@@ -46,7 +46,10 @@ public class UserEntityService {
         if(userName == null) throw new Exception("Auth error");
     }
 
-    public UserEntity saveUserEntity(UserEntityDto userEntityDto) {
+    public UserEntity saveUserEntity(UserEntityDto userEntityDto) throws Exception {
+        UserEntity ue = userRepository.findByUserName(userEntityDto.getName());
+        if(ue != null) throw new Exception("Same user exists");
+
         UserEntity userEntityTemp = new UserEntity();
         userEntityTemp.setUserName(userEntityDto.getName());
         userEntityTemp.setUserPassword(userEntityDto.getPassword());
@@ -67,9 +70,6 @@ public class UserEntityService {
 
         response.addCookie(cookie);
 
-//        SessionData sData = new SessionData();
-//        sData.maxAge = 3; // minute
-        //redisRepository.save(sessionId, sData);
         try (Jedis jedis = pool.getResource()) {
             jedis.set("sessionId", sessionId);
             jedis.expire("sessionId", 60*3);
@@ -84,7 +84,3 @@ public class UserEntityService {
             throw new Exception("Login error");
     }
 }
-//
-//class SessionData {
-//    public int maxAge;
-//}
