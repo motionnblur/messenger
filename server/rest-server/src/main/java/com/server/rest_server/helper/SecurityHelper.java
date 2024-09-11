@@ -7,17 +7,33 @@ import java.util.regex.Pattern;
 
 @Service
 public class SecurityHelper {
-    public void securityCheck(UserEntityDto userEntityDto) throws Exception {
-        if(userEntityDto.getName().isEmpty() || userEntityDto.getPassword().isEmpty())
-            throw new Exception("Security error");
+    public void securityCheckSign(UserEntityDto userEntityDto) throws Exception {
+        String userName = userEntityDto.getName();
+        String userPass = userEntityDto.getPassword();
 
-        int nameSize = userEntityDto.getName().length();
-        int passwordSize = userEntityDto.getPassword().length();
+        if(userName.isEmpty() || userPass.isEmpty())
+            throw new Exception("User name or password is empty");
+        if(userName.length() < 2)
+            throw new Exception("Name length can not be less than 2");
+        if(userPass.length() < 5)
+            throw new Exception("Password length can not be less than 5");
 
-        if(nameSize > 20 || passwordSize > 25)
-            throw new Exception("Security error");
+        int securityResult = checkPasswordStrength(userPass);
+        if (securityResult == 0)
+            throw new Exception("Your password is weak");
     }
-    public String checkPasswordStrength(String password) {
+    public void securityCheckLogin(UserEntityDto userEntityDto) throws Exception {
+        String userName = userEntityDto.getName();
+        String userPass = userEntityDto.getPassword();
+
+        if(userName.isEmpty() || userPass.isEmpty())
+            throw new Exception("User name or password is empty");
+        if(userName.length() < 2)
+            throw new Exception("Name length can not be less than 2");
+        if(userPass.length() < 5)
+            throw new Exception("Password length can not be less than 5");
+    }
+    public int checkPasswordStrength(String password) {
         int length = password.length();
         boolean hasLower = false, hasUpper = false, hasDigit = false, hasSpecial = false;
 
@@ -29,11 +45,11 @@ public class SecurityHelper {
         }
 
         if (length >= 8 && hasLower && hasUpper && hasDigit && hasSpecial) {
-            return "perfect";
+            return 2;
         } else if (length >= 6 && (hasLower || hasUpper) && hasDigit) {
-            return "normal";
+            return 1;
         } else {
-            return "not-good";
+            return 0;
         }
     }
 }

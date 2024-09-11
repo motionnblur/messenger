@@ -22,12 +22,12 @@ export default function Page() {
     return "password";
   };
 
-  const loginFunc = (): void => {
+  const loginFunc = async (): Promise<void> => {
     const userForm: ILoginForm = {
       name: userNameRef!.current?.value!,
       password: userPasswordRef!.current?.value!,
     };
-    fetch(loginUrl, {
+    const response = await fetch(loginUrl, {
       method: "POST",
       credentials: "include",
       mode: "cors",
@@ -35,7 +35,22 @@ export default function Page() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(userForm),
-    }).then((res) => {
+    });
+    if (response.ok) {
+      setUserName(userForm.name);
+      const data = response.headers.get("sessionId");
+      if (data !== null && data !== undefined) {
+        localStorage.setItem("sessionId", data);
+        push("/messenger");
+      } else {
+        push("/login");
+      }
+    } else {
+      const errorText = await response.text();
+      alert(errorText);
+    }
+
+    /* .then((res) => {
       if (res.status == 200) {
         setUserName(userForm.name);
         const data = res.headers.get("sessionId");
@@ -47,24 +62,26 @@ export default function Page() {
           push("/login");
         }
       }
-    });
+    }); */
   };
-  const signUpFunc = (): void => {
+  const signUpFunc = async (): Promise<void> => {
     const userForm: ILoginForm = {
       name: userNameRef!.current?.value!,
       password: userPasswordRef!.current?.value!,
     };
-    fetch(signUp, {
+    const response = await fetch(signUp, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(userForm),
-    }).then((res) => {
-      if (res.status == 201) {
-        setLoginStr("Login");
-      }
     });
+    if (response.ok) {
+      setLoginStr("Login");
+    } else {
+      const errorText = await response.text();
+      alert(errorText);
+    }
   };
 
   return (

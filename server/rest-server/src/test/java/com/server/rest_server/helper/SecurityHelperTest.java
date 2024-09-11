@@ -11,15 +11,15 @@ class SecurityHelperTest {
         SecurityHelper helper = new SecurityHelper();
 
         String passw = "se22";
-        String res = helper.checkPasswordStrength(passw);
-        assertEquals("not-good", res);
+        int res = helper.checkPasswordStrength(passw);
+        assertEquals(0, res);
 
         String passw2 = "se22_343s";
-        String res2 = helper.checkPasswordStrength(passw2);
-        assertEquals("normal", res2);
+        int res2 = helper.checkPasswordStrength(passw2);
+        assertEquals(1, res2);
 
         String passw3 = "Se22_343A_s";
-        String res3 = helper.checkPasswordStrength(passw3);
-        assertEquals("perfect", res3);
+        int res3 = helper.checkPasswordStrength(passw3);
+        assertEquals(2, res3);
     }
 }

@@ -22,7 +22,7 @@ public class SignUpController {
     @PutMapping("signup")
     private ResponseEntity<?> addUser(@RequestBody UserEntityDto userEntityDto) {
         try{
-            securityHelper.securityCheck(userEntityDto);
+            securityHelper.securityCheckSign(userEntityDto);
             UserEntity userEntity = userEntityService.saveUserEntity(userEntityDto);
 
             return new ResponseEntity<>(userEntity, HttpStatus.CREATED);
@@ -33,7 +33,7 @@ public class SignUpController {
     @PostMapping("/login")
     private ResponseEntity<?> loginUser(@RequestBody UserEntityDto userEntityDto, HttpServletResponse response) {
         try{
-            securityHelper.securityCheck(userEntityDto);
+            securityHelper.securityCheckLogin(userEntityDto);
             userEntityService.loginUser(response, userEntityDto);
 
             return new ResponseEntity<>(HttpStatus.OK);

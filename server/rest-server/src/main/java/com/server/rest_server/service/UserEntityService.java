@@ -57,7 +57,7 @@ public class UserEntityService {
 
     public void loginUser(HttpServletResponse response, UserEntityDto userEntityDto) throws Exception {
         UserEntity userEntity = userRepository.findByUserName(userEntityDto.getName());
-        if(userEntity == null) throw new Exception("Login error");
+        if(userEntity == null) throw new Exception("User could not be found");
 
         String sessionId = UUID.randomUUID().toString();
 
