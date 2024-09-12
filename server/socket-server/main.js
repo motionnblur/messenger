@@ -29,6 +29,10 @@ io.on("connect", (socket) => {
     const value = await client.get("sessionId");
 
     if (value === null || value === undefined) {
+      socket.emit("error", {
+        errorMessage: "Session timeout, please login again",
+        timeout: true,
+      });
       socket.disconnect();
       return;
     }

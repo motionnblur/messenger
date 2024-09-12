@@ -5,8 +5,11 @@ import { useSetAtom } from "jotai";
 import { broadCastJson } from "@/state/atoms";
 import { socket } from "@/socket";
 import Messenger from "@/components/Messenger";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const { push } = useRouter();
+
   const setBroadcastJson = useSetAtom(broadCastJson);
 
   const onConnect = () => {
@@ -20,7 +23,10 @@ export default function Home() {
   };
   const onError = (e: any) => {
     console.log(e.errorMessage);
-    alert(e.errorMessage);
+    if (e.timeout === true) {
+      alert(e.errorMessage);
+      push("/login");
+    }
   };
 
   useEffect(() => {
