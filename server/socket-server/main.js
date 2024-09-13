@@ -1,5 +1,19 @@
+const express = require("express");
 const { Server } = require("socket.io");
 const redis = require("redis");
+const port = 4001;
+const app = express();
+
+app.use(express.json());
+
+app.post("/hello", (req, res) => {
+  console.log(req.body);
+  res.send("Hello World!");
+});
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
 let messages = [];
 
@@ -46,7 +60,7 @@ io.on("connect", (socket) => {
           body: JSON.stringify({
             sessionId: messageJson.sessionId,
             userName: messageJson.userName,
-            messages: JSON.stringify(messages),
+            messages: messages,
           }),
         });
         /* const body = await response.text();

@@ -1,28 +1,32 @@
 package com.server.rest_server.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.rest_server.dto.UserEntityDto;
+import com.server.rest_server.entity.SessionEntity;
 import com.server.rest_server.entity.UserEntity;
 import com.server.rest_server.helper.AuthHelper;
-import com.server.rest_server.repository.RedisRepository;
+import com.server.rest_server.repository.SessionRepository;
 import com.server.rest_server.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.args.ExpiryOption;
-import java.util.HashMap;
 
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserEntityService {
     @Autowired
+    protected RestTemplate restTemplate;
+    @Autowired
     protected UserRepository userRepository;
+    @Autowired
+    protected SessionRepository sessionRepository;
     @Autowired
     protected AuthHelper authHelper;
 
@@ -66,13 +70,13 @@ public class UserEntityService {
         Cookie cookie = new Cookie("SESSION_ID", sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(60*2); // 3 minutes
+        cookie.setMaxAge(20); // 3 minutes
 
         response.addCookie(cookie);
 
         try (Jedis jedis = pool.getResource()) {
             jedis.set("sessionId", sessionId);
-            jedis.expire("sessionId", 60*2);
+            jedis.expire("sessionId", 20);
         }
 
         response.setHeader("Access-Control-Expose-Headers", "sessionId");
@@ -82,5 +86,21 @@ public class UserEntityService {
 
         if(!userEntity.getUserPassword().equals(userEntityDto.getPassword()))
             throw new Exception("Login error");
+
+        SessionEntity se = sessionRepository.findByUserName(userEntityDto.getName());
+        if(se == null ) return;
+        //System.out.println(se);
+        String url = "http://socket-server:4001/hello";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String jsonBody = new ObjectMapper().writeValueAsString(se.getMessages());
+        HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
+
+
+        ResponseEntity<String> _r = restTemplate.postForEntity(url, request, String.class);
+        if(_r.getStatusCode() == HttpStatus.OK){
+            System.out.println("send");
+        }
     }
 }
