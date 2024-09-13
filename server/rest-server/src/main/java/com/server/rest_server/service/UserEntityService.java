@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.args.ExpiryOption;
+import java.util.HashMap;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -64,13 +66,13 @@ public class UserEntityService {
         Cookie cookie = new Cookie("SESSION_ID", sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(60* 3); // 3 minutes
+        cookie.setMaxAge(60*2); // 3 minutes
 
         response.addCookie(cookie);
 
         try (Jedis jedis = pool.getResource()) {
             jedis.set("sessionId", sessionId);
-            jedis.expire("sessionId", 60*3);
+            jedis.expire("sessionId", 60*2);
         }
 
         response.setHeader("Access-Control-Expose-Headers", "sessionId");
