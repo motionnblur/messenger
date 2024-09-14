@@ -1,7 +1,9 @@
 package com.server.rest_server.controller;
 
 import com.server.rest_server.dto.SessionEntityDto;
+import com.server.rest_server.dto.SessionMessageDto;
 import com.server.rest_server.entity.SessionEntity;
+import com.server.rest_server.entity.UserEntity;
 import com.server.rest_server.repository.SessionRepository;
 import com.server.rest_server.service.SessionEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +31,18 @@ public class MessengerController {
         }
     }
     @GetMapping("/getSessionMessages")
-    private ResponseEntity<?> getSessionMessages(@RequestParam String userName) {
+    private ResponseEntity<?> getSessionMessages() {
         try{
-            SessionEntity[] se = sessionRepository.findByUserName(userName);
-            if(se == null ) throw new Exception("Session is null");
+            List<SessionEntity> se = sessionRepository.findAll();
+            if(se.isEmpty()) throw new Exception("Session is null");
 
-            List<String> messageArr = new ArrayList<>();
+            List<SessionMessageDto> messageArr = new ArrayList<>();
             for(SessionEntity s : se){
-                messageArr.addAll(List.of(s.getMessages()));
+                SessionMessageDto dto = new SessionMessageDto();
+                dto.setUserName(s.getUserName());
+                dto.setMessages(s.getMessages());
+
+                messageArr.add(dto);
             }
 
             return new ResponseEntity<>(messageArr, HttpStatus.OK);

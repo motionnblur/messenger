@@ -2,15 +2,14 @@
 
 import React, { useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { broadCastJson, messageList, userName } from "@/state/atoms";
+import { broadCastJson, sessionMessage, userName } from "@/state/atoms";
 import { socket } from "@/socket";
 import Messenger from "@/components/Messenger";
 import { useRouter } from "next/navigation";
-import macro from "styled-jsx/macro";
 
 export default function Home() {
   const useUserName = useAtomValue(userName);
-  const setMessage = useSetAtom(messageList);
+  const setSessionMessage = useSetAtom(sessionMessage);
 
   const { push } = useRouter();
 
@@ -34,19 +33,15 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_SESSION_IP! + "?userName" + "=" + useUserName)
+    fetch(process.env.NEXT_PUBLIC_SESSION_IP!)
       .then((res) => {
         if (!res.ok) throw new Error("Error");
         return res.json();
       })
-      .then((data) => {
-        data.forEach((m: string) => {
-          const messageObj: IMessage = {
-            userName: useUserName!,
-            message: m,
-          };
-          setMessage((messages) => [...messages, messageObj]);
-        });
+      .then((data: ISession[]) => {
+        if (data !== undefined && data !== null) {
+          setSessionMessage(data);
+        }
       });
 
     socket.on("connect", onConnect);

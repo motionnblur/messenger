@@ -61,7 +61,7 @@ io.on("connect", (socket) => {
       return;
     }
     io.emit("broadcast", messageJson);
-    messages.push(messageJson.userName + ": " + messageJson.message);
+    messages.push(messageJson.message);
 
     /*     await client.hSet("sessionId", {
       messages: JSON.stringify(messages),
