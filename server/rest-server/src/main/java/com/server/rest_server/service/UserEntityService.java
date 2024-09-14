@@ -22,8 +22,6 @@ import java.util.UUID;
 @Service
 public class UserEntityService {
     @Autowired
-    protected RestTemplate restTemplate;
-    @Autowired
     protected UserRepository userRepository;
     @Autowired
     protected SessionRepository sessionRepository;
@@ -70,13 +68,13 @@ public class UserEntityService {
         Cookie cookie = new Cookie("SESSION_ID", sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(20); // 3 minutes
+        cookie.setMaxAge(60*3); // 3 minutes
 
         response.addCookie(cookie);
 
         try (Jedis jedis = pool.getResource()) {
             jedis.set("sessionId", sessionId);
-            jedis.expire("sessionId", 20);
+            jedis.expire("sessionId", 60*3);
         }
 
         response.setHeader("Access-Control-Expose-Headers", "sessionId");
@@ -86,21 +84,5 @@ public class UserEntityService {
 
         if(!userEntity.getUserPassword().equals(userEntityDto.getPassword()))
             throw new Exception("Login error");
-
-        SessionEntity se = sessionRepository.findByUserName(userEntityDto.getName());
-        if(se == null ) return;
-        //System.out.println(se);
-        String url = "http://socket-server:4001/hello";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        String jsonBody = new ObjectMapper().writeValueAsString(se.getMessages());
-        HttpEntity<String> request = new HttpEntity<>(jsonBody, headers);
-
-
-        ResponseEntity<String> _r = restTemplate.postForEntity(url, request, String.class);
-        if(_r.getStatusCode() == HttpStatus.OK){
-            System.out.println("send");
-        }
     }
 }
