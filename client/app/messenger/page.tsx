@@ -42,6 +42,9 @@ export default function Home() {
         if (data !== undefined && data !== null) {
           setSessionMessage(data);
         }
+      })
+      .catch((e) => {
+        console.log(e);
       });
 
     socket.on("connect", onConnect);
