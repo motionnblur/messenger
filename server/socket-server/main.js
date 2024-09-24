@@ -1,6 +1,8 @@
 const { Server } = require("socket.io");
 const redis = require("redis");
 
+let messages = [];
+
 const client = redis.createClient({
   socket: {
     host: "redis", // Assuming the Redis service is named 'redis' in your Docker Compose
@@ -26,14 +28,30 @@ const io = new Server({
 
 io.on("connect", (socket) => {
   socket.on("message", async (messageJson) => {
-    const value = await client.get("sessionId");
+    const sessionData = await client.get("sessionId");
 
-    if (value === null || value === undefined) {
+    if (sessionData === null || sessionData === undefined) {
       socket.emit("error", {
         errorMessage: "Session timeout, please login again",
         timeout: true,
       });
       socket.disconnect();
+
+      (async () => {
+        const response = await fetch("http://rest-server:8080/saveMessages", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            sessionId: messageJson.sessionId,
+            userName: messageJson.userName,
+            messages: messages,
+          }),
+        });
+        /* const body = await response.text();
+        console.log(body); */
+      })();
       return;
     }
     if (messageJson.message.length > 100) {
@@ -43,6 +61,14 @@ io.on("connect", (socket) => {
       return;
     }
     io.emit("broadcast", messageJson);
+    messages.push(messageJson.message);
+
+    /*     await client.hSet("sessionId", {
+      messages: JSON.stringify(messages),
+    }); */
+
+    /*     const d = await client.hGetAll("sessionId");
+    console.log(d.messages); */
   });
 });
 

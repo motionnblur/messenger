@@ -1,26 +1,37 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import ChatLine from "./ChatLine";
-import { useAtomValue, useSetAtom } from "jotai";
-import { broadCastJson, messageList } from "@/state/atoms";
+import { useAtomValue } from "jotai";
+import { broadCastJson, sessionMessage } from "@/state/atoms";
+
+var messageArr: IMessage[] = [];
 
 export default function ChatCanvas() {
-  const messages = useAtomValue(messageList);
-  const setMessage = useSetAtom(messageList);
+  const useSessionMessage = useAtomValue(sessionMessage);
   const useBroadCastJson = useAtomValue(broadCastJson);
 
-  useEffect(() => {
-    if (useBroadCastJson != null || useBroadCastJson != undefined) {
-      setMessage((messages) => [...messages, useBroadCastJson]);
+  if (useBroadCastJson !== undefined && useBroadCastJson !== null) {
+    messageArr.push(useBroadCastJson!);
+  } else if (useSessionMessage !== undefined && useSessionMessage !== null) {
+    if (useSessionMessage) {
+      useSessionMessage.forEach((obj) => {
+        obj.messages.forEach((text: string) => {
+          messageArr.push({
+            userName: obj.userName,
+            message: text,
+          });
+        });
+      });
     }
-  }, [useBroadCastJson]);
+  }
 
   return (
     <div className="w-full h-full p-2 overflow-auto">
-      <div className="w-full h-full flex flex-col bg-slate-200 rounded-sm shadow-md shadow-slate-400 p-1">
-        {messages.map((message) => (
-          <ChatLine text={message} />
+      <div className="w-full h-full flex flex-col">
+        {messageArr.map((m: IMessage) => (
+          // eslint-disable-next-line react/jsx-key
+          <ChatLine sessionUserName={m.userName} text={m.message} />
         ))}
       </div>
     </div>

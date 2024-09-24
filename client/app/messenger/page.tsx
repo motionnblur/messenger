@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useSetAtom } from "jotai";
-import { broadCastJson } from "@/state/atoms";
+import { useAtomValue, useSetAtom } from "jotai";
+import { broadCastJson, sessionMessage, userName } from "@/state/atoms";
 import { socket } from "@/socket";
 import Messenger from "@/components/Messenger";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const useUserName = useAtomValue(userName);
+  const setSessionMessage = useSetAtom(sessionMessage);
+
   const { push } = useRouter();
 
   const setBroadcastJson = useSetAtom(broadCastJson);
@@ -30,6 +33,20 @@ export default function Home() {
   };
 
   useEffect(() => {
+    fetch(process.env.NEXT_PUBLIC_SESSION_IP!)
+      .then((res) => {
+        if (!res.ok) throw new Error("Error");
+        return res.json();
+      })
+      .then((data: ISession[]) => {
+        if (data !== undefined && data !== null) {
+          setSessionMessage(data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("broadcast", onBroadcast);
