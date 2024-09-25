@@ -3,8 +3,6 @@ package com.server.rest_server.helper;
 import com.server.rest_server.dto.UserEntityDto;
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Pattern;
-
 @Service
 public class SecurityHelper {
     public void securityCheckSign(UserEntityDto userEntityDto) throws Exception {

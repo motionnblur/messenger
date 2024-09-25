@@ -4,6 +4,5 @@ import com.server.rest_server.entity.SessionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
-    SessionEntity[] findByUserName(String userName);
-    SessionEntity[] findBySessionId(String sessionId);
+
 }

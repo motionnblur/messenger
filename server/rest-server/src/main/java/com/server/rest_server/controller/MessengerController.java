@@ -3,7 +3,6 @@ package com.server.rest_server.controller;
 import com.server.rest_server.dto.SessionEntityDto;
 import com.server.rest_server.dto.SessionMessageDto;
 import com.server.rest_server.entity.SessionEntity;
-import com.server.rest_server.entity.UserEntity;
 import com.server.rest_server.repository.SessionRepository;
 import com.server.rest_server.service.SessionEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @RestController
 public class MessengerController {

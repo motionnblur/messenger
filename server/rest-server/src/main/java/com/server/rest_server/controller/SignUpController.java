@@ -3,8 +3,6 @@ package com.server.rest_server.controller;
 import com.server.rest_server.dto.UserEntityDto;
 import com.server.rest_server.entity.UserEntity;
 import com.server.rest_server.helper.SecurityHelper;
-import com.server.rest_server.repository.RedisRepository;
-import com.server.rest_server.repository.UserRepository;
 import com.server.rest_server.service.UserEntityService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
