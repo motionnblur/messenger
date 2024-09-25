@@ -17,5 +17,5 @@ public class SessionEntity {
     private Long id;
     private String sessionId;
     private String userName;
-    private String[] messages;
+    private String message;
 }

@@ -21,8 +21,8 @@ public class MessengerController {
     @Autowired
     protected SessionRepository sessionRepository;
 
-    @PostMapping("/saveMessages")
-    private ResponseEntity<?> saveMessages(@RequestBody SessionEntityDto sDto) {
+    @PostMapping("/saveMessage")
+    private ResponseEntity<?> saveMessage(@RequestBody SessionEntityDto sDto) {
         try{
             sessionEntityService.saveSession(sDto);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -40,7 +40,7 @@ public class MessengerController {
             for(SessionEntity s : se){
                 SessionMessageDto dto = new SessionMessageDto();
                 dto.setUserName(s.getUserName());
-                dto.setMessages(s.getMessages());
+                dto.setMessage(s.getMessage());
 
                 messageArr.add(dto);
             }

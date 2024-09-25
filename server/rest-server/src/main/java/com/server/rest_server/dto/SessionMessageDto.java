@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class SessionMessageDto {
     private String userName;
-    private String[] messages;
+    private String message;
 }

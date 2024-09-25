@@ -37,21 +37,6 @@ io.on("connect", (socket) => {
       });
       socket.disconnect();
 
-      (async () => {
-        const response = await fetch("http://rest-server:8080/saveMessages", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({
-            sessionId: messageJson.sessionId,
-            userName: messageJson.userName,
-            messages: messages,
-          }),
-        });
-        /* const body = await response.text();
-        console.log(body); */
-      })();
       return;
     }
     if (messageJson.message.length > 100) {
@@ -63,12 +48,21 @@ io.on("connect", (socket) => {
     io.emit("broadcast", messageJson);
     messages.push(messageJson.message);
 
-    /*     await client.hSet("sessionId", {
-      messages: JSON.stringify(messages),
-    }); */
-
-    /*     const d = await client.hGetAll("sessionId");
-    console.log(d.messages); */
+    (async () => {
+      const response = await fetch("http://rest-server:8080/saveMessage", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          sessionId: messageJson.sessionId,
+          userName: messageJson.userName,
+          message: messageJson.message,
+        }),
+      });
+      /* const body = await response.text();
+      console.log(body); */
+    })();
   });
 });
 

@@ -15,14 +15,14 @@ public class SessionEntityService {
     protected SessionRepository sessionRepository;
 
     public void saveSession(SessionEntityDto sDto) throws Exception {
-        if(sDto.getSessionId() == null || sDto.getUserName() == null || sDto.getMessages() == null)
+        if(sDto.getSessionId() == null || sDto.getUserName() == null || sDto.getMessage() == null)
             throw new Exception("Session save error");
 
         SessionEntity se = new SessionEntity();
 
         se.setSessionId(sDto.getSessionId());
         se.setUserName(sDto.getUserName());
-        se.setMessages(sDto.getMessages());
+        se.setMessage(sDto.getMessage());
 
         sessionRepository.save(se);
     }

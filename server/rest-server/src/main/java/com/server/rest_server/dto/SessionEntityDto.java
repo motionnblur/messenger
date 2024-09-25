@@ -8,5 +8,5 @@ import lombok.Setter;
 public class SessionEntityDto {
     private String sessionId;
     private String userName;
-    private String[] messages;
+    private String message;
 }

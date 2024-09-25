@@ -16,11 +16,9 @@ export default function ChatCanvas() {
   } else if (useSessionMessage !== undefined && useSessionMessage !== null) {
     if (useSessionMessage) {
       useSessionMessage.forEach((obj) => {
-        obj.messages.forEach((text: string) => {
-          messageArr.push({
-            userName: obj.userName,
-            message: text,
-          });
+        messageArr.push({
+          userName: obj.userName,
+          message: obj.message,
         });
       });
     }
