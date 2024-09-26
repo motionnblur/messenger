@@ -10,10 +10,11 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const useUserName = useAtomValue(userName);
   const setSessionMessage = useSetAtom(sessionMessage);
+  const setBroadcastJson = useSetAtom(broadCastJson);
 
   const { push } = useRouter();
 
-  const setBroadcastJson = useSetAtom(broadCastJson);
+  const audio = new Audio("notification.mp3");
 
   const onConnect = () => {
     console.log("connected");
@@ -23,6 +24,9 @@ export default function Home() {
   };
   const onBroadcast = (data: IMessage) => {
     setBroadcastJson(data);
+    if (useUserName !== data.userName) {
+      audio.play();
+    }
   };
   const onError = (e: any) => {
     console.log(e.errorMessage);

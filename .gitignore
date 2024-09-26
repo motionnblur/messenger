@@ -1,2 +1,4 @@
 configs
 *.env
+
+client/public/
