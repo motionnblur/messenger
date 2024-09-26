@@ -1,6 +1,6 @@
 import { userName } from "@/state/atoms";
 import { useAtomValue } from "jotai";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function ChatLine({
   sessionUserName,
@@ -10,9 +10,18 @@ export default function ChatLine({
   text: String;
 }) {
   const useUserName = useAtomValue(userName);
+  const [fadeIn, setFadeIn] = useState(false);
+
+  useEffect(() => {
+    setFadeIn(true);
+  }, []);
 
   return (
-    <div className="w-full h-fit justify-center items-center p-1">
+    <div
+      className={`w-full h-fit justify-center items-center p-1 ${
+        fadeIn ? "transition-opacity duration-500 opacity-100" : "opacity-0"
+      }`}
+    >
       <div
         className={`w-full h-fit flex-wrap ${
           useUserName === sessionUserName ? "bg-blue-400" : "bg-slate-300"
