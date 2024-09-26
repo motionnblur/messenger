@@ -61,13 +61,13 @@ public class UserEntityService {
         Cookie cookie = new Cookie("SESSION_ID", sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(60); // 3 minutes
+        cookie.setMaxAge(60*5); // 5 minutes
 
         response.addCookie(cookie);
 
         try (Jedis jedis = pool.getResource()) {
             jedis.set("sessionId", sessionId);
-            jedis.expire("sessionId", 60);
+            jedis.expire("sessionId", 60*5);
         }
 
         response.setHeader("Access-Control-Expose-Headers", "sessionId");
