@@ -18,7 +18,7 @@ export default function ChatLine({
 
   return (
     <div
-      className={`w-fit max-w-96 h-fit flex flex-col m-1 ${
+      className={`w-fit h-fit flex flex-col m-1 ${
         useUserName !== sessionUserName && "mr-0 ml-auto"
       } ${
         fadeIn ? "transition-opacity duration-500 opacity-100" : "opacity-0"
