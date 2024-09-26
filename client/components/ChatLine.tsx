@@ -18,7 +18,9 @@ export default function ChatLine({
 
   return (
     <div
-      className={`w-full h-fit justify-center items-center p-1 ${
+      className={`w-fit h-fit justify-center items-center p-1 ${
+        useUserName !== sessionUserName && "mr-0 ml-auto"
+      } ${
         fadeIn ? "transition-opacity duration-500 opacity-100" : "opacity-0"
       }`}
     >
@@ -37,7 +39,9 @@ export default function ChatLine({
             useUserName === sessionUserName ? "text-white" : "text-black"
           } text-lg font-medium`}
         >
-          {sessionUserName + ": " + text}
+          {sessionUserName === useUserName
+            ? text
+            : sessionUserName + ": " + text}
         </div>
       </div>
     </div>
