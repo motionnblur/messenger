@@ -6,6 +6,9 @@ import com.server.rest_server.entity.SessionEntity;
 import com.server.rest_server.repository.SessionRepository;
 import com.server.rest_server.service.SessionEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +34,9 @@ public class MessengerController {
     @GetMapping("/getSessionMessages")
     private ResponseEntity<?> getSessionMessages() {
         try{
-            List<SessionEntity> se = sessionRepository.findAll();
+            Pageable pageable = PageRequest.of(0, 50, Sort.by("id").descending());
+
+            List<SessionEntity> se = sessionRepository.findAll(pageable).getContent().reversed();
             if(se.isEmpty()) throw new Exception("Session is null");
 
             List<SessionMessageDto> messageArr = new ArrayList<>();
