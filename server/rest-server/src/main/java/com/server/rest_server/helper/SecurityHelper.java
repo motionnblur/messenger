@@ -12,9 +12,16 @@ public class SecurityHelper {
         if(userName.isEmpty() || userPass.isEmpty())
             throw new Exception("User name or password is empty");
         if(userName.length() < 2)
-            throw new Exception("Name length can not be less than 2");
+            throw new Exception("User name can not be less than 2");
+        else if(userName.length() > 10)
+            throw new Exception("User name can not be more than 10");
         if(userPass.length() < 5)
             throw new Exception("Password length can not be less than 5");
+        else if(userPass.length() > 50)
+            throw new Exception("Password length can not be more than 50");
+
+        if(!isValidString(userEntityDto.getName()))
+            throw new Exception("User name should include only character or number");
 
         int securityResult = checkPasswordStrength(userPass);
         if (securityResult == 0)
@@ -49,5 +56,15 @@ public class SecurityHelper {
         } else {
             return 0;
         }
+    }
+
+    public static boolean isValidString(String input) {
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (!Character.isLetterOrDigit(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
