@@ -18,32 +18,42 @@ export default function ChatLine({
 
   return (
     <div
-      className={`w-fit h-fit justify-center items-center p-1 ${
+      className={`w-fit max-w-96 h-fit flex flex-col m-1 ${
         useUserName !== sessionUserName && "mr-0 ml-auto"
       } ${
         fadeIn ? "transition-opacity duration-500 opacity-100" : "opacity-0"
-      }`}
+      }  ${useUserName === sessionUserName && "bg-blue-400"} rounded-lg p-1`}
     >
       <div
-        className={`w-full h-fit flex-wrap ${
-          useUserName === sessionUserName ? "bg-blue-400" : "bg-slate-300"
-        } rounded-lg p-1`}
-        style={{
-          wordWrap: "break-word",
-          whiteSpace: "pre-wrap",
-          overflowWrap: "break-word",
-        }}
+        className={`w-fit max-w-96 h-full justify-center items-center rounded-lg ${
+          useUserName !== sessionUserName && "bg-slate-200 p-1 mr-1"
+        }`}
       >
         <div
-          className={`${
+          className={`w-full h-fit flex-wrap ${
             useUserName === sessionUserName ? "text-white" : "text-black"
           } text-lg font-medium`}
+          style={{
+            wordWrap: "break-word",
+            whiteSpace: "pre-wrap",
+            overflowWrap: "break-word",
+          }}
         >
-          {sessionUserName === useUserName
-            ? text
-            : sessionUserName + ": " + text}
+          {text}
         </div>
       </div>
+      {useUserName !== sessionUserName && (
+        <div
+          className="mr-0 ml-auto flex-wrap text-slate-800 text-xs"
+          style={{
+            wordWrap: "break-word",
+            whiteSpace: "pre-wrap",
+            overflowWrap: "break-word",
+          }}
+        >
+          {sessionUserName}
+        </div>
+      )}
     </div>
   );
 }
