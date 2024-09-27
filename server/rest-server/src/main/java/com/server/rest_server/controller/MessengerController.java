@@ -31,12 +31,48 @@ public class MessengerController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/getPreviousMessagePage")
+    private ResponseEntity<?> getPreviousMessagePage(@RequestParam int factor) {
+        try {
+            if(factor <= 0) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            long count = sessionRepository.count();
+            if(count <= 50) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            long difL = (count - 50L*factor) - 50;
+            if(difL < 0) difL = 0;
+            long difR = count - 50L*factor;
+
+            List<SessionEntity> se = sessionRepository.findEntitiesInRange(difL, difR).reversed();
+            if (se.isEmpty()) throw new Exception("Session is null");
+
+            List<SessionMessageDto> messageArr = new ArrayList<>();
+            for (SessionEntity s : se) {
+                SessionMessageDto dto = new SessionMessageDto();
+                dto.setUserName(s.getUserName());
+                dto.setMessage(s.getMessage());
+
+                messageArr.add(dto);
+            }
+
+            return new ResponseEntity<>(messageArr, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/getSessionMessages")
     private ResponseEntity<?> getSessionMessages() {
         try{
-            Pageable pageable = PageRequest.of(0, 50, Sort.by("id").descending());
+            long count = sessionRepository.count();
+            List<SessionEntity> se;
 
-            List<SessionEntity> se = sessionRepository.findAll(pageable).getContent().reversed();
+            if(count > 50) {
+                se = sessionRepository.findEntitiesInRange(count-50, count).reversed();
+            }else{
+                se = sessionRepository.findEntitiesInRange(0L, count).reversed();
+            }
             if(se.isEmpty()) throw new Exception("Session is null");
 
             List<SessionMessageDto> messageArr = new ArrayList<>();
