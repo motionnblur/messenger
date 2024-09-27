@@ -40,7 +40,8 @@ export default function SessionLoader({
             memory.lastMessageArr = data;
             factor += 1;
             setRender(!render);
-          });
+          })
+          .catch((err) => console.log(err));
       }}
     />
   );
