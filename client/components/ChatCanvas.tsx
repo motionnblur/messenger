@@ -17,6 +17,7 @@ export default function ChatCanvas() {
   const uploadRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    uploadRef!.current!.style.display = "none";
     if (canvasRef.current !== null) {
       canvasRef.current.scrollTop = canvasRef.current.scrollHeight;
     }
@@ -52,7 +53,6 @@ export default function ChatCanvas() {
       <div className="w-full h-full flex flex-col">
         <SessionLoader
           uploadRef={uploadRef}
-          factor={memory.factor}
           messageArr={memory.messageArr}
           setRender={setRender}
           render={render}

@@ -4,13 +4,11 @@ import React from "react";
 
 export default function SessionLoader({
   uploadRef,
-  factor,
   messageArr,
   setRender,
   render,
 }: {
   uploadRef: React.RefObject<HTMLDivElement>;
-  factor: number;
   messageArr: IMessage[];
   setRender: React.Dispatch<React.SetStateAction<boolean>>;
   render: boolean;
@@ -21,12 +19,17 @@ export default function SessionLoader({
   bg-teal-300 w-14 h-14 rounded-full cursor-pointer"
       ref={uploadRef}
       onClick={() => {
-        fetch(process.env.NEXT_PUBLIC_PREVIOUS_MESSAGE! + "?factor=" + factor, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        fetch(
+          process.env.NEXT_PUBLIC_PREVIOUS_MESSAGE! +
+            "?factor=" +
+            memory.factor,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
           .then((res) => {
             if (!res.ok) throw new Error("Error");
             return res.json();
@@ -38,7 +41,7 @@ export default function SessionLoader({
             messageArr.unshift(...data);
 
             memory.lastMessageArr = data;
-            factor += 1;
+            memory.factor += 1;
             setRender(!render);
           })
           .catch((err) => console.log(err));
