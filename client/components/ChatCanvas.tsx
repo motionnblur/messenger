@@ -5,9 +5,7 @@ import ChatLine from "./ChatLine";
 import { useAtomValue } from "jotai";
 import { broadCastJson, sessionMessage } from "@/state/atoms";
 import SessionLoader from "./SessionLoader";
-
-var messageArr: IMessage[] = [];
-var factor: number = 1;
+import { memory } from "@/logic/memory";
 
 export default function ChatCanvas() {
   const useSessionMessage = useAtomValue(sessionMessage);
@@ -25,11 +23,11 @@ export default function ChatCanvas() {
   }, [useSessionMessage, useBroadCastJson]);
 
   if (useBroadCastJson !== undefined && useBroadCastJson !== null) {
-    messageArr.push(useBroadCastJson!);
+    memory.messageArr.push(useBroadCastJson!);
   } else if (useSessionMessage !== undefined && useSessionMessage !== null) {
     if (useSessionMessage) {
       useSessionMessage.forEach((obj) => {
-        messageArr.push({
+        memory.messageArr.push({
           userName: obj.userName,
           message: obj.message,
         });
@@ -42,7 +40,7 @@ export default function ChatCanvas() {
       className="w-full h-full p-2 overflow-auto"
       ref={canvasRef}
       onScroll={() => {
-        if (messageArr.length < 50) return;
+        if (memory.messageArr.length < 50) return;
 
         if (canvasRef!.current!.scrollTop === 0) {
           uploadRef!.current!.style.display = "block";
@@ -54,12 +52,12 @@ export default function ChatCanvas() {
       <div className="w-full h-full flex flex-col">
         <SessionLoader
           uploadRef={uploadRef}
-          factor={factor}
-          messageArr={messageArr}
+          factor={memory.factor}
+          messageArr={memory.messageArr}
           setRender={setRender}
           render={render}
         />
-        {messageArr.map((m: IMessage) => (
+        {memory.messageArr.map((m: IMessage) => (
           // eslint-disable-next-line react/jsx-key
           <ChatLine sessionUserName={m.userName} text={m.message} />
         ))}
