@@ -45,7 +45,7 @@ public class MessengerController {
             long difR = count - 50L*factor;
 
             List<SessionEntity> se = sessionRepository.findEntitiesInRange(difL, difR).reversed();
-            if (se.isEmpty()) throw new Exception("Session is null");
+            if (se.isEmpty()) return new ResponseEntity<>(HttpStatus.LOCKED);
 
             List<SessionMessageDto> messageArr = new ArrayList<>();
             for (SessionEntity s : se) {

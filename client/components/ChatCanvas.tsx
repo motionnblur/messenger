@@ -7,6 +7,8 @@ import { broadCastJson, sessionMessage } from "@/state/atoms";
 import SessionLoader from "./SessionLoader";
 import { memory } from "@/logic/memory";
 
+var isUploadButtonEnabled: boolean = false;
+
 export default function ChatCanvas() {
   const useSessionMessage = useAtomValue(sessionMessage);
   const useBroadCastJson = useAtomValue(broadCastJson);
@@ -20,6 +22,9 @@ export default function ChatCanvas() {
     uploadRef!.current!.style.display = "none";
     if (canvasRef.current !== null) {
       canvasRef.current.scrollTop = canvasRef.current.scrollHeight;
+      if (memory.messageArr.length >= 50) {
+        isUploadButtonEnabled = true;
+      }
     }
   }, [useSessionMessage, useBroadCastJson]);
 
@@ -41,12 +46,14 @@ export default function ChatCanvas() {
       className="w-full h-full p-2 overflow-auto"
       ref={canvasRef}
       onScroll={() => {
-        if (memory.messageArr.length < 50) return;
-
-        if (canvasRef!.current!.scrollTop === 0) {
-          uploadRef!.current!.style.display = "block";
-        } else {
-          uploadRef!.current!.style.display = "none";
+        if (isUploadButtonEnabled) {
+          if (!memory.locked) {
+            if (canvasRef!.current!.scrollTop === 0) {
+              uploadRef!.current!.style.display = "block";
+            } else {
+              uploadRef!.current!.style.display = "none";
+            }
+          }
         }
       }}
     >
