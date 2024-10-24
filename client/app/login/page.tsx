@@ -16,6 +16,7 @@ export default function Page() {
   const [typePassword, setTypePassword] = useState<String>("password");
   const userNameRef = useRef<HTMLInputElement>(null);
   const userPasswordRef = useRef<HTMLInputElement>(null);
+  const checkBoxRef = useRef<HTMLInputElement>(null);
 
   const getPasswState = (): string => {
     if (typePassword === "password") return "text";
@@ -104,13 +105,17 @@ export default function Page() {
               placeholder=" Password"
               ref={userPasswordRef}
             />
-            <div className="w-full h-6 flex flex-row">
+            <div
+              className="w-full h-6 flex flex-row cursor-pointer"
+              onMouseUp={() => {
+                checkBoxRef.current!.checked = !checkBoxRef.current!.checked;
+                setTypePassword(getPasswState);
+              }}
+            >
               <input
                 type="checkbox"
                 className="w-1/6 h-5 rounded-md cursor-pointer"
-                onMouseUp={() => {
-                  setTypePassword(getPasswState);
-                }}
+                ref={checkBoxRef}
               />
               <div className="text-black text-sm ml-1">Show password</div>
             </div>
