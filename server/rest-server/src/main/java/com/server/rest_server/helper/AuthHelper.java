@@ -38,6 +38,14 @@ public class AuthHelper {
         }
         return null;
     }
+    public boolean isUserAlreadyLoggedIn(String userName) {
+        for (Auth au : authList) {
+            if (au.userName.equals(userName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 class Auth {

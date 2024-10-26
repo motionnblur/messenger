@@ -54,20 +54,25 @@ public class UserEntityService {
 
     public void loginUser(HttpServletResponse response, UserEntityDto userEntityDto) throws Exception {
         UserEntity userEntity = userRepository.findByUserName(userEntityDto.getName());
-        if(userEntity == null) throw new Exception("User could not be found");
+        if (userEntity == null) throw new Exception("User could not be found");
+
+        // Check if user is already logged in
+        if (authHelper.isUserAlreadyLoggedIn(userEntityDto.getName())) {
+            throw new Exception("User is already logged in");
+        }
 
         String sessionId = UUID.randomUUID().toString();
 
         Cookie cookie = new Cookie("SESSION_ID", sessionId);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        cookie.setMaxAge(60*5); // 5 minutes
+        cookie.setMaxAge(60 * 5); // 5 minutes
 
         response.addCookie(cookie);
 
         try (Jedis jedis = pool.getResource()) {
             jedis.set("sessionId", sessionId);
-            jedis.expire("sessionId", 60*5);
+            jedis.expire("sessionId", 60 * 5);
         }
 
         response.setHeader("Access-Control-Expose-Headers", "sessionId");
@@ -75,7 +80,8 @@ public class UserEntityService {
 
         authHelper.addToAuthList(sessionId, userEntity.getUserName());
 
-        if(!userEntity.getUserPassword().equals(userEntityDto.getPassword()))
+        if (!userEntity.getUserPassword().equals(userEntityDto.getPassword())) {
             throw new Exception("Login error");
+        }
     }
 }
