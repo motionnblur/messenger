@@ -62,3 +62,7 @@ To get a copy of the project up and running on your local machine for developmen
    ```
 
 The React application should now be running on [http://localhost:3000](http://localhost:3000).
+
+### Screenshots
+
+<img width="1914" height="1042" alt="messenger" src="https://github.com/user-attachments/assets/7ac59f4e-2517-40c5-8f2f-1eeef2d0c677" />
